@@ -86,8 +86,11 @@ namespace WebAPI_JWT.Controllers
 				return BadRequest("Invalid user request!!!");
 			}
 
-			if (await GetUser(user.UserName, user.Password))
-			{
+            //if (await GetUser(user.UserName, user.Password))
+            //{
+            if (user.UserName == "string" && user.Password == "string")
+            {
+
 				var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ConfigurationManager.AppSetting["JWT:Secret"]));
 				
 				var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
