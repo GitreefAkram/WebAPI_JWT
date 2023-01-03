@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Documents\\GitHub\\WebAPI_JWT\\API\\WebAPI_JWT\\WebAPI_JWT.csproj": {}
+    "C:\\Users\\IT\\Documents\\GitHub\\WebAPI_JWT\\API\\WebAPI_JWT\\WebAPI_JWT.csproj": {}
   },
   "projects": {
-    "E:\\Documents\\GitHub\\WebAPI_JWT\\API\\WebAPI_JWT\\WebAPI_JWT.csproj": {
+    "C:\\Users\\IT\\Documents\\GitHub\\WebAPI_JWT\\API\\WebAPI_JWT\\WebAPI_JWT.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Documents\\GitHub\\WebAPI_JWT\\API\\WebAPI_JWT\\WebAPI_JWT.csproj",
+        "projectUniqueName": "C:\\Users\\IT\\Documents\\GitHub\\WebAPI_JWT\\API\\WebAPI_JWT\\WebAPI_JWT.csproj",
         "projectName": "WebAPI_JWT",
-        "projectPath": "E:\\Documents\\GitHub\\WebAPI_JWT\\API\\WebAPI_JWT\\WebAPI_JWT.csproj",
-        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
-        "outputPath": "E:\\Documents\\GitHub\\WebAPI_JWT\\API\\WebAPI_JWT\\obj\\",
+        "projectPath": "C:\\Users\\IT\\Documents\\GitHub\\WebAPI_JWT\\API\\WebAPI_JWT\\WebAPI_JWT.csproj",
+        "packagesPath": "C:\\Users\\IT\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\IT\\Documents\\GitHub\\WebAPI_JWT\\API\\WebAPI_JWT\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\IT\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -43,6 +43,10 @@
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[6.0.12, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[6.0.1, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
@@ -87,7 +91,8 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -99,7 +104,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     }

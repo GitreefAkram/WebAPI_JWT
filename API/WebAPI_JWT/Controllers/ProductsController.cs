@@ -20,6 +20,7 @@ namespace WebAPI_JWT.Controllers
             _context = context;
         }
 
+		[Authorize(Roles = "Products")]
         // GET: api/Products
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
@@ -27,8 +28,8 @@ namespace WebAPI_JWT.Controllers
             return await _context.Products.ToListAsync();
         }
 
-        // GET: api/Products/5
-        [HttpGet("{id}")]
+		// GET: api/Products/5
+		[HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
             var product = await _context.Products.FindAsync(id);

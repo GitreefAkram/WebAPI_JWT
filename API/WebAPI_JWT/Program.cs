@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using System.Text;
 using WebAPI_JWT.DataDB;
 using ConfigurationManager = WebAPI_JWT.ConfigurationManager;
@@ -13,6 +13,11 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<DialZeroNGContext>(options =>
 	options.UseSqlServer(connectionString));
 
+
+// For Identity
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+	.AddEntityFrameworkStores<DialZeroNGContext>()
+	.AddDefaultTokenProviders();
 
 builder.Services.AddControllers();
 
@@ -56,6 +61,7 @@ builder.Services.AddAuthentication(opt =>
 {
 	opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 	opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+	opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
 	options.TokenValidationParameters = new TokenValidationParameters

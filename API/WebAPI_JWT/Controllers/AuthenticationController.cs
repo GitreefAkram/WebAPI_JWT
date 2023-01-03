@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -17,9 +18,22 @@ namespace WebAPI_JWT.Controllers
 
 		public IConfiguration _configuration;
 		private readonly DialZeroNGContext _context;
+		private readonly UserManager<IdentityUser> _userManager;
+		private readonly RoleManager<IdentityRole> _roleManager;
+		
 
-		public AuthenticationController(IConfiguration config, DialZeroNGContext context)
+		public AuthenticationController
+		(
+			UserManager<IdentityUser> userManager,
+			RoleManager<IdentityRole> roleManager,
+
+			IConfiguration config, 
+			DialZeroNGContext context
+			
+			)
 		{
+			_userManager = userManager;
+			_roleManager = roleManager;
 			_configuration = config;
 			_context = context;
 		}
@@ -79,36 +93,72 @@ namespace WebAPI_JWT.Controllers
 		}
 
 		[HttpPost("login")]
-		public async Task<IActionResult> Login([FromBody] Login user)
+		public async Task<IActionResult> Login([FromBody] Login model)
 		{
-			if (user is null)
+			var user = await _userManager.FindByNameAsync(model.UserName);
+			if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
 			{
-				return BadRequest("Invalid user request!!!");
-			}
+				var userRoles = await _userManager.GetRolesAsync(user);
 
-            //if (await GetUser(user.UserName, user.Password))
-            //{
-            if (user.UserName == "string" && user.Password == "string")
-            {
-
-				var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ConfigurationManager.AppSetting["JWT:Secret"]));
-				
-				var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-				
-				var tokeOptions = new JwtSecurityToken(
-					issuer: ConfigurationManager.AppSetting["JWT:Issuer"], 
-					audience: ConfigurationManager.AppSetting["JWT:Audience"], 
-					claims: new List<Claim>(), 
-					expires: DateTime.Now.AddMinutes(10), 
-					signingCredentials: signinCredentials);
-				
-				var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
-				return Ok(new JWTTokenResponse
+				var authClaims = new List<Claim>
 				{
-					Token = tokenString
+					new Claim(ClaimTypes.Name, user.UserName),
+					new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+				};
+
+				foreach (var userRole in userRoles)
+				{
+					authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+				}
+
+				var token = GetToken(authClaims);
+
+				return Ok(new
+				{
+					token = new JwtSecurityTokenHandler().WriteToken(token),
+					expiration = token.ValidTo
 				});
 			}
 			return Unauthorized();
 		}
+
+
+		private JwtSecurityToken GetToken(List<Claim> authClaims)
+		{
+
+
+
+			var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ConfigurationManager.AppSetting["JWT:Secret"]));
+
+			var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+
+			var tokeOptions = new JwtSecurityToken(
+				issuer: ConfigurationManager.AppSetting["JWT:Issuer"],
+				audience: ConfigurationManager.AppSetting["JWT:Audience"],
+				claims: authClaims,
+				expires: DateTime.Now.AddMinutes(10),
+				signingCredentials: signinCredentials);
+
+			var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
+
+
+			//var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+
+			//var token = new JwtSecurityToken
+			//	(
+			//	issuer: _configuration["JWT:ValidIssuer"],
+			//	audience: _configuration["JWT:ValidAudience"],
+			//	expires: DateTime.Now.AddHours(3),
+			//	claims: authClaims,
+			//	signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+				
+			//	);
+
+			return tokeOptions;
+		}
+
+
+
+
 	}
 }
